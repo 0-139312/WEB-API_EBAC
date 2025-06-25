@@ -5,14 +5,15 @@ document.addEventListener("DOMContentLoaded", ()=>{ //o DOMContentLoaded garante
     campos.forEach(campo => {
         const dadoSalvo = localStorage.getItem(campo);
         if (dadoSalvo) {
-            document.getElementById(campo).value = JSON.parse(dadoSalvo);
+            try{
+                document.getElementById(campo).value = JSON.parse(dadoSalvo);
+            } catch (erro) {
+                console.warn(`Erro ao ler o campo ${campo}:`, erro)
+                localStorage.removeItem(campo);
+            }
+            
         }
     });
-
-
-
-
-
 
     inputCEP.addEventListener("blur", function(){
         const cepDigitado = inputCEP.value; // está pegando o inputCEP que está como string e transformando em valor numérico para usarmos depois
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", ()=>{ //o DOMContentLoaded garante
             .then(dados => {
                 console.log("Verificando debug:", dados) // teste no console
 
-                document.getElementById("cep").value = dados.estado;
+                document.getElementById("cep").value = dados.cep;
                 const inputNovoCEP = document.getElementById("cep").value;
                 localStorage.setItem("cep", JSON.stringify(inputNovoCEP));
 
